@@ -34,6 +34,7 @@ class AuthUserService
 		{
 			$storeData = [
 				'user_id' => $id,
+				'is_late' => date('Y-m-d H:i:s') > date('Y-m-d 09:40:00'),
 				'type' => 1
 			];
 
@@ -43,6 +44,7 @@ class AuthUserService
 		elseif(isset($authUser->id) && is_null($authUser->confirm_at) && date('Y-m-d H:i:s') > date('Y-m-d 17:00:00'))
 		{
 			$updateData = [
+				'is_overtime' => date('Y-m-d H:i:s') > date('Y-m-d 18:40:00'),
 				'confirm_at' => date('Y-m-d H:i:s')
 			];
 
@@ -56,6 +58,7 @@ class AuthUserService
 	{
 		$request = [
 			'user_id' => $data['user_id'],
+			'is_late' => $data['is_late'],
 			'type' => $data['type']
 		];
 		return $this->authUser->create($request);
@@ -73,12 +76,18 @@ class AuthUserService
 
 	public function getAuthUsersByDate($data)
 	{
-		return $this->authUser->select('auth_users.id', 'auth_users.confirm_at', 'auth_users.created_at', 'u.name', 'u.surname', 'u.email', 'u.phone', 'b.name as branch_name')
+		$result = $this->authUser->select('auth_users.id', 'auth_users.is_late', 'auth_users.is_overtime', 'auth_users.confirm_at', 'auth_users.created_at', 'u.name', 'u.surname', 'u.email', 'u.phone', 'b.name as branch_name')
 						      ->selectRaw('(select name from branch where id=b.parent_id) department_name')
    	     				      ->join('users as u', 'u.id', '=', 'auth_users.user_id')
 	     				  	  ->join('branch as b', 'b.id', '=', 'u.branch_id')
 							  ->where('auth_users.created_at', '>=', date('Y-m-d', strtotime($data['from'])))
-							  ->where('auth_users.created_at', '<=', date('Y-m-d 23:59:00', strtotime($data['to'])))
-							  ->get();
+							  ->where('auth_users.created_at', '<=', date('Y-m-d 23:59:00', strtotime($data['to'])));
+
+		if($data['type'] == 1)
+			$result->where('is_late', 1);
+		elseif($data['type'] == 2)
+			$result->where('is_overtime', 1);
+	
+		return $result->get();
 	}
 }

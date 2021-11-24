@@ -15,10 +15,10 @@ class BranchService
 
 	public function list()
 	{
-		$branches = $this->branch->where('parent_id', 0)->where('status', '<>', 2)->orderBy('id', 'desc')->get();
+		$branches = $this->branch->where('parent_id', 0)->where('status', 1)->orderBy('id', 'desc')->get();
 		foreach($branches as $count => $branch)
 		{
-			$branches[$count]->children = $branch->children()->get();
+			$branches[$count]->children = $branch->children()->where('status', 1)->get();
 		}
 
 		return $branches;

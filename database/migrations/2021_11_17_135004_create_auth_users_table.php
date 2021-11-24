@@ -17,6 +17,8 @@ class CreateAuthUsersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->tinyInteger('type');
+            $table->tinyInteger('is_late');
+            $table->tinyInteger('is_overtime')->nullable();
             $table->datetime('confirm_at')->nullable();
             $table->timestamps();
 

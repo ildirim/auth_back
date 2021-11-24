@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use Event;
 use App\Models\User;
 use App\Services\QrCodeService;
+use App\Events\SendMailEvent;
 
 class UserService
 {
@@ -53,13 +55,18 @@ class UserService
 		if($user)
 		{
 			$qrCodeService = new QrCodeService();
-			$imageName = $qrCodeService->generate(env('APP_URL') . '/auth/' . $user->id);
+			$imageName = $qrCodeService->generate(env('APP_URL') . '/public/auth/' . $user->id);
 
 			$request = [
 				'qr_code_link' => env('APP_URL') . '/auth/' . $user->id,
 				'qr_code_image' => $imageName
 			];
+
 			$this->user->where('id', $user->id)->update($request);
+
+        	Event::dispatch(new SendMailEvent($user->id));
+
+        	return true;
 		}
 	}
 

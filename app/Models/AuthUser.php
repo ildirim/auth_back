@@ -13,6 +13,6 @@ class AuthUser extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'type', 'confirm_at'
+        'user_id', 'type', 'is_late', 'is_overtime', 'confirm_at'
     ];
 }
