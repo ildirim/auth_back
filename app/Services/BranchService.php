@@ -13,15 +13,9 @@ class BranchService
 		$this->branch = new Branch();
 	}
 
-	public function list()
+	public function branches()
 	{
-		$branches = $this->branch->where('parent_id', 0)->where('status', 1)->orderBy('id', 'desc')->get();
-		foreach($branches as $count => $branch)
-		{
-			$branches[$count]->children = $branch->children()->where('status', 1)->get();
-		}
-
-		return $branches;
+		return $this->branch->where('status', 1)->orderBy('id', 'desc')->get();
 	}
 
 	public function activeBranches()

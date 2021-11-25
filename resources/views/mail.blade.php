@@ -1,11 +1,2 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title></title>
-</head>
-<body>
-	<img src="{{ asset('images/qr/' . $image) }}">
-	ssss
-</body>
-</html>
+<h1><img src="{{ url('/images/qr/' . $image) }}"></h1>
+<a href="{{ url('/images/qr/' . $image) }}"  target="_blank" download>Download</a>

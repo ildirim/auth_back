@@ -30,7 +30,7 @@ class SendMailListener
     {
         $user = User::find($event->userId)->toArray();
         
-        Mail::send('mail', ['image' => $user['qr_code_image'], 'content' => 'content'], function ($message)
+        Mail::send('mail', ['image' => $user['qr_code_image']], function ($message)
         {
            $message->from('ildirim.huseyn@gmail.com', 'Christian Nwamba');
            $message->to('ildirim5895@gmail.com');
