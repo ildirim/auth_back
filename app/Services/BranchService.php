@@ -15,7 +15,14 @@ class BranchService
 
 	public function branches()
 	{
-		return $this->branch->where('status', 1)->orderBy('id', 'desc')->get();
+		$branches = $this->branch->select('branch.*', 'b.name as branch_name')
+						  		 ->join('branch as b', 'b.parent_id', '=', 'branch.id', 'left')
+								 ->where('branch.parent_id', 0)
+								 ->where('branch.status', '<>', 2)
+								 ->orderBy('id', 'desc')
+								 ->get();
+
+		return $branches;
 	}
 
 	public function activeBranches()
