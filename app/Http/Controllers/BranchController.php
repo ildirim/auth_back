@@ -17,7 +17,7 @@ class BranchController extends Controller
 
 	public function index()
 	{
-		$response = app(ResponseService::class)->response($this->branchService->branches());
+		$response = app(ResponseService::class)->response($this->branchService->list());
 		return response()->json($response['response'], $response['code']);
 		
 	}

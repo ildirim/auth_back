@@ -13,16 +13,26 @@ class BranchService
 		$this->branch = new Branch();
 	}
 
-	public function branches()
+	public function list()
 	{
-		$branches = $this->branch->select('branch.*', 'b.name as branch_name')
-						  		 ->join('branch as b', 'b.parent_id', '=', 'branch.id', 'left')
-								 ->where('branch.parent_id', 0)
-								 ->where('branch.status', '<>', 2)
-								 ->orderBy('id', 'desc')
-								 ->get();
+		$branches = $this->branch->where('parent_id', 0)->where('status', '<>', 2)->orderBy('id', 'desc')->get();
+		$count = 0;
+		$resultBranches = [];
+		foreach($branches as  $branch)
+		{
+			$childrenBranches = $branch->children()->select('branch.*', 'branch.name as branch_name')->selectRaw('(SELECT name FROM branch b WHERE b.id=branch.parent_id) as department_name')->where('status', 1)->get();
+			
+			$resultBranches[$count] = $branch;
+			$resultBranches[$count]['department_name'] = $branch->name;
+			foreach($childrenBranches as $childrenBranch)
+			{
+				++$count;
+				$resultBranches[$count] = $childrenBranch;
+			}
+			++$count;
+		}
 
-		return $branches;
+		return $resultBranches;
 	}
 
 	public function activeBranches()
