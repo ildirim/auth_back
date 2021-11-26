@@ -26,8 +26,11 @@ class AuthUserService
 							  ->first();
 	}
 
-	public function entranceOrExit($id)
+	public function entranceOrExit($id, $request)
 	{
+		if($request->headers->all()['token'][0] != '!4f@6ACeD1%$58382b86lwW14AE2P#562c1')
+			return false;
+
 		$authUser = $this->getAuthUserByUserId($id);
 
 		if(!$authUser)

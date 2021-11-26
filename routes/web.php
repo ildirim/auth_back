@@ -30,7 +30,7 @@ $router->group(['prefix' => 'user'], function () use ($router) {
 
 
 // auth user
-$router->get('/auth/{id}', ['uses' => 'AuthUserController@entranceOrExit']);
+$router->post('/auth/{id}/id', ['uses' => 'AuthUserController@entranceOrExit']);
 $router->post('/auth/report', ['uses' => 'AuthUserController@getAuthUsersByDate']);
 
 

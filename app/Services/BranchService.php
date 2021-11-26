@@ -59,6 +59,7 @@ class BranchService
 	{
 		$request = [
 			'parent_id' => $data['parent_id'],
+			'curation' => $data['curation'],
 			'name' => $data['name'],
 			'status' => $data['status']
 		];
@@ -70,6 +71,7 @@ class BranchService
 	{
 		$request = [
 			'parent_id' => $data['parent_id'],
+			'curation' => $data['curation'],
 			'name' => $data['name'],
 			'status' => $data['status']
 		];

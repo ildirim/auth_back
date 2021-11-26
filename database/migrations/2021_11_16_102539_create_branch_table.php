@@ -16,6 +16,7 @@ class CreateBranchTable extends Migration
         Schema::create('branch', function (Blueprint $table) {
             $table->id();
             $table->integer('parent_id')->default(0);
+            $table->tinyInteger('curation');
             $table->string('name');
             $table->tinyInteger('status');
             $table->timestamps();

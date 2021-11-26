@@ -15,9 +15,9 @@ class AuthUserController extends Controller
           $this->authUserService = $authUserService;
      }
 
-     public function entranceOrExit($id)
+     public function entranceOrExit($id, Request $request)
      {
-          $response = app(ResponseService::class)->response($this->authUserService->entranceOrExit($id));
+          $response = app(ResponseService::class)->response($this->authUserService->entranceOrExit($id, $request));
           return response()->json($response['response'], $response['code']);
      }
 

@@ -14,7 +14,7 @@ class Branch extends Model
      */
     protected $table = 'branch';
     protected $fillable = [
-        'parent_id', 'name', 'status',
+        'parent_id', 'curation', 'name', 'status',
     ];
 
     public function parent() {
