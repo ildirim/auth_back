@@ -65,7 +65,7 @@ class UserService
 		if($user)
 		{
 			$qrCodeService = new QrCodeService();
-			$imageName = $qrCodeService->generate(env('APP_URL') . '/public/auth/' . $user->id);
+			$imageName = $qrCodeService->generate(env('APP_URL') . 'auth/' . $user->id);
 
 			$request = [
 				'qr_code_link' => env('APP_URL') . '/auth/' . $user->id,
