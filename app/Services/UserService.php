@@ -41,8 +41,18 @@ class UserService
 		return $this->user->where('name', $name)->first();
 	}
 
+	public function userByEmail($email)
+	{
+		return $this->user->where('email', $email)->first();
+	}
+
 	public function store($data)
 	{
+		$user = $this->userByEmail($data['email']);
+
+		if($user)
+			return true;
+
 		$request = [
 			'branch_id' => $data['branch_id'],
 			'name' => $data['name'],
@@ -68,6 +78,8 @@ class UserService
 
         	return true;
 		}
+
+		return false;
 	}
 
 	public function update($id, $data)
