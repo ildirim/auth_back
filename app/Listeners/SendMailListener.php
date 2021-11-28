@@ -31,11 +31,11 @@ class SendMailListener
         $user = User::find($event->userId)->toArray();
         Mail::send('mail', ['image' => $user['qr_code_image']], function ($message) use($user)
         {
+           $message->subject('Milli Observatoriya - Giriş üçün QR kod');
            $message->from('ildirim.huseyn@gmail.com', 'Christian Nwamba');
-           $message->to('ildirim5895@gmail.com');
+           $message->to($user['email']);
            $message->attach(url('/images/qr/' . $user['qr_code_image']), [
-                         'as' => 'sample.pdf',
-                         'mime' => 'application/pdf',
+                         'as' => 'qr.png'
                     ]);
         });
     }
