@@ -18,7 +18,7 @@ class UserService
 
 	public function list()
 	{
-		return $this->user->select('users.id', 'users.name', 'users.surname', 'users.email', 'users.phone', 'users.qr_code_link', 'b.name as branch_name')
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name')
 						  ->selectRaw('(select name from branch where id=b.parent_id) department_name')
 	     				  ->join('branch as b', 'b.id', '=', 'users.branch_id')
 						  ->where('users.status', '<>', 2)
@@ -57,8 +57,10 @@ class UserService
 			'branch_id' => $data['branch_id'],
 			'name' => $data['name'],
 			'surname' => $data['surname'],
+			'gender' => $data['gender'] ?? 1,
 			'email' => $data['email'],
 			'phone' => $data['phone'],
+			'internal_phone' => $data['internal_phone'],
 			'status' => $data['status']
 		];
 		$user = $this->user->create($request);
@@ -88,8 +90,10 @@ class UserService
 			'branch_id' => $data['branch_id'],
 			'name' => $data['name'],
 			'surname' => $data['surname'],
+			'gender' => $data['gender'] ?? 1,
 			'email' => $data['email'],
-			'phone' => $data['phone']
+			'phone' => $data['phone'],
+			'internal_phone' => $data['internal_phone']
 		];
 		return $this->user->where('id', $id)
    				     			  ->update($request);

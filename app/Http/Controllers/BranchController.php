@@ -28,6 +28,12 @@ class BranchController extends Controller
 		return response()->json($response['response'], $response['code']);
 	}
 
+	public function childrenBranches()
+	{
+		$response = app(ResponseService::class)->response($this->branchService->childrenBranches());
+		return response()->json($response['response'], $response['code']);
+	}
+
 	public function branchById($id)
 	{
 		$branch = $this->branchService->branchById($id);

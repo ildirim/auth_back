@@ -38,6 +38,7 @@ $router->post('/auth/report', ['uses' => 'AuthUserController@getAuthUsersByDate'
 $router->group(['prefix' => 'branch'], function () use ($router) {
     $router->get('/', ['uses' => 'BranchController@index']);
     $router->get('/active', ['uses' => 'BranchController@activeBranches']);
+    $router->get('/children', ['uses' => 'BranchController@childrenBranches']);
     $router->get('/{id}', ['uses' => 'BranchController@branchById']);
     $router->get('/child/{parentId}', ['uses' => 'BranchController@branchesByParentId']);
     $router->post('/store', ['uses' => 'BranchController@store']);
