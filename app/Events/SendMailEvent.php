@@ -12,10 +12,12 @@ class SendMailEvent extends Event
      * @return void
      */
     use SerializesModels;
-    public $userId;
-    public function __construct($userId)
+    private $userId;
+    private $password;
+    public function __construct($userId, $password)
     {
         $this->userId = $userId;
+        $this->password = $password;
     }
     public function broadcastOn()
     {

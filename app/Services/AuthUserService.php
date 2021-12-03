@@ -67,12 +67,13 @@ class AuthUserService
 		return $this->authUser->create($request);
 	}
 
-	public function update($id, $data)
+	public function update($userId, $data)
 	{
 		$request = [
+			'is_overtime' => $data['is_overtime'],
 			'confirm_at' => $data['confirm_at']
 		];
-		return $this->authUser->where('user_id', $id)
+		return $this->authUser->where('user_id', $userId)
 							  ->whereNull('confirm_at')
    				     	      ->update($request);
 	}

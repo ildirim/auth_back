@@ -15,17 +15,19 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('branch_id');
             $table->string('name', 200);
             $table->string('surname', 200);
+            $table->string('middle_name', 200);
+            $table->tinyInteger('gender');
             $table->string('email', 200);
+            $table->string('password', 200);
+            $table->string('token', 200);
             $table->string('phone', 50);
+            $table->string('internal_phone', 50);
             $table->string('qr_code_link', 200)->nullable();
             $table->string('qr_code_image', 200)->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
-            
-            $table->foreign('branch_id')->references('id')->on('branch');
         }); 
     }
 

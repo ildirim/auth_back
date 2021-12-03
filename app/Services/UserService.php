@@ -3,9 +3,12 @@
 namespace App\Services;
 
 use Event;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Services\QrCodeService;
+use App\Services\UserAuthorityService;
 use App\Events\SendMailEvent;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -16,13 +19,31 @@ class UserService
 		$this->user = new User();
 	}
 
-	public function list()
+	public function check($request)
+    {
+      $user = $this->userByEmail($request->email);
+      if ($user) {
+          if (Hash::check($request->password, $user['password'])) {
+          	$apikey = base64_encode(Str::random(40));
+          	$this->user->where('email', $request->email)->update(['token' => $apikey]);
+          	$user['token'] = $apikey;
+            // unauthenticated
+            return $user;
+          }
+      }
+      return false;
+    }
+
+	public function users()
 	{
-		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name')
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name', 'p.name as position_name', 'ua.importance_level')
 						  ->selectRaw('(select name from branch where id=b.parent_id) department_name')
-	     				  ->join('branch as b', 'b.id', '=', 'users.branch_id')
+	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
+	     				  ->join('positions as p', 'p.id', '=', 'ua.position_id')
 						  ->where('users.status', '<>', 2)
-						  ->orderBy('id', 'desc')
+						  ->where('ua.status', 1)
+						  ->orderBy('users.id', 'desc')
 						  ->get();
 	}
 
@@ -48,17 +69,43 @@ class UserService
 
 	public function store($data)
 	{
-		$user = $this->userByEmail($data['email']);
+		DB::beginTransaction();
+		try {
+			$user = $this->userByEmail($data['email']);
 
-		if($user)
+			if($user)
+				return true;
+
+			// store user
+			$user = $this->storeUserAndSendEmail($data);
+
+			if(!$user)
+				return false;
+
+			// store user authority
+			$userAuthorityService = new UserAuthorityService();
+			$userAuthorityService->store($data, $user->id);
+
+			DB::commit();
+
 			return true;
+		} catch(Exception $e) {
+			DB::rollback();
+			return false;
+		}
+	}
 
+	private function storeUserAndSendEmail($data)
+	{
+		$password = Str::random(8);
 		$request = [
-			'branch_id' => $data['branch_id'],
 			'name' => $data['name'],
 			'surname' => $data['surname'],
+			'middle_name' => $data['middle_name'],
 			'gender' => $data['gender'] ?? 1,
 			'email' => $data['email'],
+			'password' => Hash::make($password),
+			'token' => '',
 			'phone' => $data['phone'],
 			'internal_phone' => $data['internal_phone'],
 			'status' => $data['status']
@@ -74,13 +121,12 @@ class UserService
 				'qr_code_image' => $imageName
 			];
 
-			$this->user->where('id', $user->id)->update($request);
+			$storedUser = $this->user->where('id', $user->id)->update($request);
 
-        	Event::dispatch(new SendMailEvent($user->id));
+        	// Event::dispatch(new SendMailEvent($user->id));
 
-        	return true;
+        	return $storedUser->id;
 		}
-
 		return false;
 	}
 
@@ -88,8 +134,10 @@ class UserService
 	{
 		$request = [
 			'branch_id' => $data['branch_id'],
+			'position_id' => $data['position_id'],
 			'name' => $data['name'],
 			'surname' => $data['surname'],
+			'middle_name' => $data['surname'],
 			'gender' => $data['gender'] ?? 1,
 			'email' => $data['email'],
 			'phone' => $data['phone'],

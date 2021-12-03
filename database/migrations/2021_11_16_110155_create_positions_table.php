@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsToUsersTable extends Migration
+class CreatePositionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class AddColumnsToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->tinyInteger('gender');
-            $table->string('internal_phone', 50);
+        Schema::create('positions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 200);
+            $table->tinyInteger('status');
+            $table->timestamps();
         });
     }
 
@@ -26,8 +28,6 @@ class AddColumnsToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('positions');
     }
 }

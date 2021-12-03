@@ -15,9 +15,17 @@ class UserController extends Controller
           $this->userService = $userService;
      }
 
-     public function index()
+     public function check(Request $request)
      {
-          $response = app(ResponseService::class)->response($this->userService->list());
+          $result = $this->userService->check($request);
+          $response = $result == false ? app(ResponseService::class)->response($result, UNAUTHORIZED, UNAUTHORIZED_STATUS) : app(ResponseService::class)->response($result);
+          return response()->json($response['response'], $response['code']);
+          
+     }
+
+     public function users()
+     {
+          $response = app(ResponseService::class)->response($this->userService->users());
           return response()->json($response['response'], $response['code']);
           
      }

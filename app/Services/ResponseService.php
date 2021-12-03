@@ -15,13 +15,13 @@ class ResponseService
 		return $this->data;
 	}
 	
-	public function response($data)
+	public function response($data, $code = SUCCESS, $status = SUCCESS_STATUS)
 	{
 		try {
 			// $success = $data->isEmpty() ? NOT_CONTENT : SUCCESS;
 			return [
-				'response' => ['code' => SUCCESS, 'status' => SUCCESS_STATUS, 'data' => $data],
-				'code' => SUCCESS
+				'response' => ['code' => $code, 'status' => $status, 'data' => $data],
+				'code' => $code
 			];
 		} catch (Exception $e) {
 			return [

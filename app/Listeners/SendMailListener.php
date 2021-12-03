@@ -29,7 +29,7 @@ class SendMailListener
     public function handle(SendMailEvent $event)
     {
         $user = User::find($event->userId)->toArray();
-        Mail::send('mail', ['image' => $user['qr_code_image']], function ($message) use($user)
+        Mail::send('mail', ['image' => $user['qr_code_image'], 'password' => $event->password], function ($message) use($user)
         {
            $message->subject('Milli Observatoriya - Giriş üçün QR kod');
            $message->from('ildirim.huseyn@gmail.com', 'Əmək Bazarı və Sosial Müdafiə Məsələləri üzrə Milli Observatoriya');
