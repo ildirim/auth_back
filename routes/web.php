@@ -18,10 +18,11 @@ $router->get('/', function () use ($router) {
 
 // user
 $router->group(['prefix' => 'user'], function () use ($router) {
-    $router->get('/', ['uses' => 'UserController@index']);
-    $router->get('/active', ['uses' => 'UserController@activeBranches']);
+    $router->get('/', ['uses' => 'UserController@users']);
+    $router->get('/active', ['uses' => 'UserController@activeUsers']);
     $router->get('/{id}', ['uses' => 'UserController@userById']);
     $router->get('/child/{parentId}', ['uses' => 'UserController@useresByParentId']);
+    $router->post('/check', ['uses' => 'UserController@check']);
     $router->post('/store', ['uses' => 'UserController@store']);
     $router->put('/update/{id}', ['uses' => 'UserController@update']);
     $router->put('/delete/{id}', ['uses' => 'UserController@delete']);
@@ -44,6 +45,17 @@ $router->group(['prefix' => 'branch'], function () use ($router) {
     $router->post('/store', ['uses' => 'BranchController@store']);
     $router->put('/update/{id}', ['uses' => 'BranchController@update']);
     $router->put('/delete/{id}', ['uses' => 'BranchController@delete']);
+});
+
+
+// position
+$router->group(['prefix' => 'position'], function () use ($router) {
+    $router->get('/', ['uses' => 'PositionController@positions']);
+    $router->get('/active', ['uses' => 'PositionController@activePositions']);
+    $router->get('/{id}', ['uses' => 'PositionController@branchById']);
+    $router->post('/store', ['uses' => 'PositionController@store']);
+    $router->put('/update/{id}', ['uses' => 'PositionController@update']);
+    $router->put('/delete/{id}', ['uses' => 'PositionController@delete']);
 });
 
 // generate qr code

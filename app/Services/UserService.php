@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\DB;
 use Event;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -77,14 +78,14 @@ class UserService
 				return true;
 
 			// store user
-			$user = $this->storeUserAndSendEmail($data);
+			$userId = $this->storeUserAndSendEmail($data);
 
-			if(!$user)
+			if(!$userId)
 				return false;
 
 			// store user authority
 			$userAuthorityService = new UserAuthorityService();
-			$userAuthorityService->store($data, $user->id);
+			$userAuthorityService->store($data, $userId);
 
 			DB::commit();
 
@@ -108,20 +109,21 @@ class UserService
 			'token' => '',
 			'phone' => $data['phone'],
 			'internal_phone' => $data['internal_phone'],
+			'importance_level' => $data['importance_level'],
 			'status' => $data['status']
 		];
-		$user = $this->user->create($request);
-		if($user)
+		$storedUser = $this->user->create($request);
+		if($storedUser)
 		{
 			$qrCodeService = new QrCodeService();
-			$imageName = $qrCodeService->generate(env('APP_URL') . 'auth/' . $user->id . '/id');
+			$imageName = $qrCodeService->generate(env('APP_URL') . 'auth/' . $storedUser->id . '/id');
 
 			$request = [
-				'qr_code_link' => env('APP_URL') . '/auth/' . $user->id,
+				'qr_code_link' => env('APP_URL') . '/auth/' . $storedUser->id,
 				'qr_code_image' => $imageName
 			];
 
-			$storedUser = $this->user->where('id', $user->id)->update($request);
+			$this->user->where('id', $storedUser->id)->update($request);
 
         	// Event::dispatch(new SendMailEvent($user->id));
 
@@ -141,7 +143,8 @@ class UserService
 			'gender' => $data['gender'] ?? 1,
 			'email' => $data['email'],
 			'phone' => $data['phone'],
-			'internal_phone' => $data['internal_phone']
+			'internal_phone' => $data['internal_phone'],
+			'importance_level' => $data['importance_level']
 		];
 		return $this->user->where('id', $id)
    				     			  ->update($request);
