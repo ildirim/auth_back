@@ -42,7 +42,7 @@ class WorkPermitService
 							    ->get();
 	}
 
-	public function Report_workPermitsByUserId($userId)
+	public function workPermitsByUserId2($userId)
 	{
 		$branchIdList = [];
 		$userAuthorityService = new UserAuthorityService();
