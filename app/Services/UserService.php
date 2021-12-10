@@ -147,7 +147,7 @@ class UserService
 
 			$this->user->where('id', $storedUser->id)->update($request);
 
-        	// Event::dispatch(new RegisterMailEvent($user->id));
+        	Event::dispatch(new RegisterMailEvent($storedUser->id, $password));
 
         	return $storedUser->id;
 		}

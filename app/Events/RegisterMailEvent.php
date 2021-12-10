@@ -12,8 +12,8 @@ class RegisterMailEvent extends Event
      * @return void
      */
     use SerializesModels;
-    private $userId;
-    private $password;
+    public $userId;
+    public $password;
     public function __construct($userId, $password)
     {
         $this->userId = $userId;
