@@ -17,14 +17,12 @@ class CreateUserAuthorityTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('branch_id');
-            $table->unsignedBigInteger('position_id');
-            $table->tinyInteger('importance_level')->nullable();
+            $table->integer('position_id');
             $table->tinyInteger('status');
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('branch_id')->references('id')->on('branch');
-            $table->foreign('position_id')->references('id')->on('positions');
         });
     }
 

@@ -4,7 +4,7 @@ namespace App\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SendMailEvent extends Event
+class WorkPermitMailEvent extends Event
 {
     /**
      * Create a new event instance.
@@ -12,12 +12,10 @@ class SendMailEvent extends Event
      * @return void
      */
     use SerializesModels;
-    private $userId;
-    private $password;
-    public function __construct($userId, $password)
+    public $userId;
+    public function __construct($userId)
     {
         $this->userId = $userId;
-        $this->password = $password;
     }
     public function broadcastOn()
     {

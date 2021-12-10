@@ -26,9 +26,4 @@ class UserAuthority extends Model
     {
         return $this->belongsToOne(App\Models\User::class, 'branch_id');
     }
-
-    public function position()
-    {
-        return $this->belongsToOne(App\Models\Position::class, 'position_id');
-    }
 }

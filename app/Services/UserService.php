@@ -7,8 +7,9 @@ use Event;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Services\QrCodeService;
+use App\Services\BranchService;
 use App\Services\UserAuthorityService;
-use App\Events\SendMailEvent;
+use App\Events\RegisterMailEvent;
 use Illuminate\Support\Str;
 
 class UserService
@@ -37,11 +38,10 @@ class UserService
 
 	public function users()
 	{
-		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name', 'p.name as position_name', 'ua.importance_level')
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name', 'ua.position_id')
 						  ->selectRaw('(select name from branch where id=b.parent_id) department_name')
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
 	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
-	     				  ->join('positions as p', 'p.id', '=', 'ua.position_id')
 						  ->where('users.status', '<>', 2)
 						  ->where('ua.status', 1)
 						  ->orderBy('users.id', 'desc')
@@ -55,7 +55,30 @@ class UserService
 
 	public function userById($id)
 	{
-		return $this->user->where('id', $id)->first();
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.branch_id', 'ua.position_id', 'b.curation')
+	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
+						  ->where('users.id', $id)
+						  ->first();
+	}
+
+	public function userByBranchIdAndPositionIds($branchId, $positionIds)
+	{
+		$branchService = new BranchService();
+		$branch = $branchService->branchById($branchId);
+		$parentId = $branch['parent_id'] ?? 0;
+
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.position_id')
+	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
+						  ->where(
+							  	function($q) use($branchId, $parentId) {
+							  		return $q
+							  				->where('ua.branch_id', $branchId)
+									     	->orWhere('b.id', $parentId);
+							  	})
+						  ->whereIn('ua.position_id', $positionIds)
+						  ->first();
 	}
 
 	public function userByName($name)
@@ -109,7 +132,6 @@ class UserService
 			'token' => '',
 			'phone' => $data['phone'],
 			'internal_phone' => $data['internal_phone'],
-			'importance_level' => $data['importance_level'],
 			'status' => $data['status']
 		];
 		$storedUser = $this->user->create($request);
@@ -125,7 +147,7 @@ class UserService
 
 			$this->user->where('id', $storedUser->id)->update($request);
 
-        	// Event::dispatch(new SendMailEvent($user->id));
+        	// Event::dispatch(new RegisterMailEvent($user->id));
 
         	return $storedUser->id;
 		}
@@ -144,7 +166,6 @@ class UserService
 			'email' => $data['email'],
 			'phone' => $data['phone'],
 			'internal_phone' => $data['internal_phone'],
-			'importance_level' => $data['importance_level']
 		];
 		return $this->user->where('id', $id)
    				     			  ->update($request);

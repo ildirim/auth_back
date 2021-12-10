@@ -6,7 +6,7 @@ use Event;
 use Illuminate\Support\Facades\Hash;
 use App\Models\UserAuthority;
 use App\Services\QrCodeService;
-use App\Events\SendMailEvent;
+use App\Events\RegisterMailEvent;
 use Illuminate\Support\Str;
 
 class UserAuthorityService
@@ -18,13 +18,17 @@ class UserAuthorityService
 		$this->userAuthority = new UserAuthority();
 	}
 
+	public function userAuthorityByUserId($userId)
+	{
+		return $this->userAuthority->where('user_id', $userId)->first();
+	}
+
 	public function store($data, $userId)
 	{
 		$request = [
 			'user_id' => $userId,
 			'branch_id' => $data['branch_id'],
 			'position_id' => $data['position_id'],
-			'importance_level' => $data['importance_level'],
 			'status' => $data['status']
 		];
 		return $this->userAuthority->create($request);
@@ -36,7 +40,6 @@ class UserAuthorityService
 			'user_id' => $data['user_id'],
 			'branch_id' => $data['branch_id'],
 			'position_id' => $data['position_id'],
-			'importance_level' => $data['importance_level']
 		];
 		return $this->userAuthority->where('id', $id)
    				     			  ->update($request);

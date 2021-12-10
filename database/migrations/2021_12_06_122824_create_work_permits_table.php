@@ -19,14 +19,15 @@ class CreateWorkPermitsTable extends Migration
             $table->datetime('from');
             $table->datetime('to');
             $table->string('reason', 1000);
-            $table->unsignedBigInteger('approved_by1');
-            $table->datetime('approved_at1');
-            $table->unsignedBigInteger('approved_by2');
-            $table->datetime('approved_at2');
-            $table->unsignedBigInteger('approved_by3');
-            $table->datetime('approved_at3');
-            $table->string('reject_reason');
-            $table->datetime('rejected_at');
+            $table->unsignedBigInteger('approved_by1')->nullable();
+            $table->datetime('approved_at1')->nullable();
+            $table->unsignedBigInteger('approved_by2')->nullable();
+            $table->datetime('approved_at2')->nullable();
+            $table->unsignedBigInteger('approved_by3')->nullable();
+            $table->datetime('approved_at3')->nullable();
+            $table->string('reject_reason')->nullable();
+            $table->unsignedBigInteger('rejected_by')->nullable();
+            $table->datetime('rejected_at')->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
 

@@ -52,10 +52,22 @@ $router->group(['prefix' => 'branch'], function () use ($router) {
 $router->group(['prefix' => 'position'], function () use ($router) {
     $router->get('/', ['uses' => 'PositionController@positions']);
     $router->get('/active', ['uses' => 'PositionController@activePositions']);
-    $router->get('/{id}', ['uses' => 'PositionController@branchById']);
+    $router->get('/{id}', ['uses' => 'PositionController@positionById']);
     $router->post('/store', ['uses' => 'PositionController@store']);
     $router->put('/update/{id}', ['uses' => 'PositionController@update']);
     $router->put('/delete/{id}', ['uses' => 'PositionController@delete']);
+});
+
+// work permits
+$router->group(['prefix' => 'work-permit'], function () use ($router) {
+    $router->get('/', ['uses' => 'WorkPermitController@workPermits']);
+    $router->get('/{userId}/user-id', ['uses' => 'WorkPermitController@workPermitsByUserId']);
+    $router->get('/{id}/id', ['uses' => 'WorkPermitController@workPermitById']);
+    $router->post('/store', ['uses' => 'WorkPermitController@store']);
+    $router->put('/approve/{id}', ['uses' => 'WorkPermitController@approve']);
+    $router->put('/reject/{id}', ['uses' => 'WorkPermitController@reject']);
+    $router->put('/update/{id}', ['uses' => 'WorkPermitController@update']);
+    $router->put('/delete/{id}', ['uses' => 'WorkPermitController@delete']);
 });
 
 // generate qr code

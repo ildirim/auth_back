@@ -2,13 +2,13 @@
 
 namespace App\Listeners;
 
-use App\Events\SendMailEvent;
+use App\Events\RegisterMailEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
-class SendMailListener
+class RegisterMailListener
 {
     /**
      * Create the event listener.
@@ -23,10 +23,10 @@ class SendMailListener
     /**
      * Handle the event.
      *
-     * @param  \App\Events\SendMailEvent  $event
+     * @param  \App\Events\RegisterMailEvent  $event
      * @return void
      */
-    public function handle(SendMailEvent $event)
+    public function handle(RegisterMailEvent $event)
     {
         $user = User::find($event->userId)->toArray();
         Mail::send('mail', ['image' => $user['qr_code_image'], 'password' => $event->password], function ($message) use($user)

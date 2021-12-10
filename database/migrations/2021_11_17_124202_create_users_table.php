@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('token', 200);
             $table->string('phone', 50);
             $table->string('internal_phone', 50);
-            $table->tinyInteger('importance_level');
             $table->string('qr_code_link', 200)->nullable();
             $table->string('qr_code_image', 200)->nullable();
             $table->tinyInteger('status');
