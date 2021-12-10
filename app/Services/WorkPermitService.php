@@ -83,8 +83,8 @@ class WorkPermitService
 		try {
 			$storedId = $this->storeWorkPermit($data);
 	    	$user = $this->responsibleUser($data);
-			// if($user)
-			// 	Event::dispatch(new WorkPermitMailEvent($user->id));
+			if($user)
+				Event::dispatch(new WorkPermitMailEvent($user->id));
 	    	DB::commit();
 
 			return true;
