@@ -41,7 +41,7 @@ class UserService
 		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name', 'ua.position_id')
 						  ->selectRaw('(select name from branch where id=b.parent_id) department_name')
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
-	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id', 'left')
 						  ->where('users.status', '<>', 2)
 						  ->where('ua.status', 1)
 						  ->orderBy('users.id', 'desc')
@@ -78,6 +78,18 @@ class UserService
 									     	->orWhere('b.id', $parentId);
 							  	})
 						  ->whereIn('ua.position_id', $positionIds)
+						  ->where('users.status', '<>', 2)
+						  ->orderBy('ua.position_id', 'desc')
+						  ->first();
+	}
+
+	public function userByPositionIds($positionIds)
+	{
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.position_id')
+	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
+						  ->whereIn('ua.position_id', $positionIds)
+						  ->where('users.status', '<>', 2)
+						  ->orderBy('ua.position_id', 'desc')
 						  ->first();
 	}
 
@@ -88,7 +100,10 @@ class UserService
 
 	public function userByEmail($email)
 	{
-		return $this->user->where('email', $email)->first();
+		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.branch_id', 'ua.position_id', 'b.curation')
+	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
+	     				  ->where('email', $email)
+	     				  ->first();
 	}
 
 	public function store($data)
@@ -147,7 +162,7 @@ class UserService
 
 			$this->user->where('id', $storedUser->id)->update($request);
 
-        	Event::dispatch(new RegisterMailEvent($storedUser->id, $password));
+        	// Event::dispatch(new RegisterMailEvent($storedUser->id, $password));
 
         	return $storedUser->id;
 		}

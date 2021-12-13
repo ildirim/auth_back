@@ -10,9 +10,9 @@ class ChairmanWorkPermitRespondService implements IWorkPermitRespondService
 	public function approveRequest($data, $responsibleUser)
 	{
 		return [
-			'approved_by2' => $data['user_id'],
-			'approved_at2' => date('Y-m-d H:i:s'),
-			'status' => WorkPermitEnum::APPROVED2_ID
+			'approved_by3' => $data['user_id'],
+			'approved_at3' => date('Y-m-d H:i:s'),
+			'status' => WorkPermitEnum::APPROVED3_ID
 		];
 	}
 }

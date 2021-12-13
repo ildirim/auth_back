@@ -62,6 +62,7 @@ $router->group(['prefix' => 'position'], function () use ($router) {
 $router->group(['prefix' => 'work-permit'], function () use ($router) {
     $router->get('/', ['uses' => 'WorkPermitController@workPermits']);
     $router->get('/{userId}/user-id', ['uses' => 'WorkPermitController@workPermitsByUserId']);
+    $router->post('/report/user-id2', ['uses' => 'WorkPermitController@workPermitsByUserId2']);
     $router->get('/{id}/id', ['uses' => 'WorkPermitController@workPermitById']);
     $router->post('/store', ['uses' => 'WorkPermitController@store']);
     $router->put('/approve/{id}', ['uses' => 'WorkPermitController@approve']);

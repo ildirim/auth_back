@@ -28,9 +28,9 @@ class WorkPermitController extends Controller
 		return response()->json($response['response'], $response['code']);
 	}
 
-	public function workPermitsByUserId2($userId)
+	public function workPermitsByUserId2(Request $request)
 	{
-		$response = app(ResponseService::class)->response($this->workPermitService->workPermitsByUserId2($userId));
+		$response = app(ResponseService::class)->response($this->workPermitService->workPermitsByUserId2($request));
 		return response()->json($response['response'], $response['code']);
 	}
 
