@@ -97,8 +97,8 @@ class WorkPermitService
 		try {
 			$storedId = $this->storeWorkPermit($data);
 	    	$user = $this->responsibleUser($data['maker_id']);
-			// if($user)
-			// 	Event::dispatch(new WorkPermitMailEvent($user->id));
+			if($user)
+				Event::dispatch(new WorkPermitMailEvent($user->id));
 	    	DB::commit();
 
 			return true;
@@ -148,8 +148,8 @@ class WorkPermitService
 	{
 		$workPermit = $this->workPermit->where('id', $id)->first();
 		$responsibleUser = $this->responsibleUser($data['user_id']);
-		// if($responsibleUser)
-			// 	Event::dispatch(new WorkPermitMailEvent($responsibleUser->id));
+		if($responsibleUser)
+			Event::dispatch(new WorkPermitMailEvent($responsibleUser->id));
 
 		if(is_null($workPermit['approved_by1']))
 			$manager = $this->getApproveRequest(new BranchManagerWorkPermitRespondManager());
