@@ -102,6 +102,7 @@ class UserService
 	{
 		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.branch_id', 'ua.position_id', 'b.curation')
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
 	     				  ->where('email', $email)
 	     				  ->first();
 	}
