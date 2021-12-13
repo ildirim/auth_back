@@ -155,15 +155,15 @@ class UserService
 		$storedUser = $this->user->create($request);
 		if($storedUser)
 		{
-			$qrCodeService = new QrCodeService();
-			$imageName = $qrCodeService->generate(env('APP_URL') . 'auth/' . $storedUser->id . '/id');
+			// $qrCodeService = new QrCodeService();
+			// $imageName = $qrCodeService->generate(env('APP_URL') . 'auth/' . $storedUser->id . '/id');
 
-			$request = [
-				'qr_code_link' => env('APP_URL') . '/auth/' . $storedUser->id,
-				'qr_code_image' => $imageName
-			];
+			// $request = [
+			// 	'qr_code_link' => env('APP_URL') . '/auth/' . $storedUser->id,
+			// 	'qr_code_image' => $imageName
+			// ];
 
-			$this->user->where('id', $storedUser->id)->update($request);
+			// $this->user->where('id', $storedUser->id)->update($request);
 
         	Event::dispatch(new RegisterMailEvent($storedUser->id, $password));
 

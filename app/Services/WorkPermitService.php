@@ -44,6 +44,21 @@ class WorkPermitService
 
 	public function workPermitsByUserId2($request)
 	{
+		$workPermits = $this->workPermit->select('work_permits.id', 'work_permits.maker_id', 'work_permits.from', 'work_permits.to', 'work_permits.reason', 'work_permits.approved_by1', 'work_permits.approved_at1', 'work_permits.approved_by2', 'work_permits.approved_at2', 'work_permits.approved_by3', 'work_permits.approved_at3', 'work_permits.reject_reason', 'work_permits.rejected_at', 'work_permits.status', 'work_permits.created_at', 'u.name', 'u.surname', 'u.middle_name')
+   	     				        ->join('users as u', 'u.id', '=', 'work_permits.maker_id')
+   	     				        ->join('user_authority as ua', 'ua.user_id', '=', 'work_permits.maker_id')
+   	     				        ->where('work_permits.created_at', '>=', date('Y-m-d', strtotime($request['from'])))
+							  	->where('work_permits.created_at', '<=', date('Y-m-d 23:59:00', strtotime($request['to'])))
+								->where('work_permits.status', '<>', 2);
+
+
+		$userService = new UserService();
+		$user = $userService->userById($request['user_id']);
+
+		if($user['position_id'] == 1 || $user['position_id'] == 2)
+			return $workPermits->get();
+
+
 		$branchIdList = [];
 		$userAuthorityService = new UserAuthorityService();
 		$branchId = $userAuthorityService->userAuthorityByUserId($request['user_id'])->branch_id;
@@ -57,17 +72,9 @@ class WorkPermitService
 			$branchIdList[] = $childBranch['id'];
 		}
 
-		$workPermits = $this->workPermit->select('work_permits.id', 'work_permits.maker_id', 'work_permits.from', 'work_permits.to', 'work_permits.reason', 'work_permits.approved_by1', 'work_permits.approved_at1', 'work_permits.approved_by2', 'work_permits.approved_at2', 'work_permits.approved_by3', 'work_permits.approved_at3', 'work_permits.reject_reason', 'work_permits.rejected_at', 'work_permits.status', 'work_permits.created_at', 'u.name', 'u.surname', 'u.middle_name')
-   	     				        ->join('users as u', 'u.id', '=', 'work_permits.maker_id')
-   	     				        ->join('user_authority as ua', 'ua.user_id', '=', 'work_permits.maker_id')
-   	     				        ->where('work_permits.created_at', '>=', date('Y-m-d', strtotime($request['from'])))
-							  	->where('work_permits.created_at', '<=', date('Y-m-d 23:59:00', strtotime($request['to'])))
-								->where('maker_id', $request['user_id'])
-								->orWhereIn('branch_id', $branchIdList)
-								->where('work_permits.status', '<>', 2)
-							    ->get();
-	
-		return $workPermits;
+		
+		return $workPermits->whereIn('branch_id', $branchIdList)
+				    ->get();
 	}
 
 	public function workPermitById($id)
