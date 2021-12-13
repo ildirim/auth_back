@@ -38,6 +38,7 @@ class UserService
 
 	public function users()
 	{
+    	// return Hash::make('admin');
 		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'b.name as branch_name', 'ua.position_id')
 						  ->selectRaw('(select name from branch where id=b.parent_id) department_name')
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
@@ -104,6 +105,7 @@ class UserService
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
 	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id', 'left')
 	     				  ->where('email', $email)
+						  ->where('users.status', '<>', 2)
 	     				  ->first();
 	}
 
@@ -163,7 +165,7 @@ class UserService
 
 			$this->user->where('id', $storedUser->id)->update($request);
 
-        	Event::dispatch(new RegisterMailEvent($storedUser->id, $password));
+        	// Event::dispatch(new RegisterMailEvent($storedUser->id, $password));
 
         	return $storedUser->id;
 		}

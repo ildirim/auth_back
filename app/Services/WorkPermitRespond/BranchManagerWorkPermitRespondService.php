@@ -15,7 +15,7 @@ class BranchManagerWorkPermitRespondService implements IWorkPermitRespondService
 			'status' => WorkPermitEnum::APPROVED1_ID
 
 		];
-		if(!$responsibleUser)
+		if(!$responsibleUser || (isset($responsibleUser) && $responsibleUser['position_id'] == 1 || $responsibleUser['position_id'] == 2))
 		{
 			$request['approved_by2'] = $data['user_id'];
 			$request['approved_at2'] = date('Y-m-d H:i:s');
