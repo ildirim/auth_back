@@ -57,7 +57,7 @@ class UserService
 	{
 		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.branch_id', 'ua.position_id', 'b.curation')
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
-	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id', 'left')
 						  ->where('users.id', $id)
 						  ->first();
 	}
@@ -100,9 +100,9 @@ class UserService
 
 	public function userByEmail($email)
 	{
-		return $this->user->select('users.id', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.branch_id', 'ua.position_id', 'b.curation')
+		return $this->user->select('users.id', 'users.password', 'users.status', 'users.name', 'users.surname', 'users.middle_name', 'users.gender', 'users.email', 'users.phone', 'users.internal_phone', 'users.qr_code_link', 'ua.branch_id', 'ua.position_id', 'b.curation')
 	     				  ->join('user_authority as ua', 'ua.user_id', '=', 'users.id')
-	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
+	     				  ->join('branch as b', 'b.id', '=', 'ua.branch_id', 'left')
 	     				  ->where('email', $email)
 	     				  ->first();
 	}
