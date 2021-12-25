@@ -1,0 +1,5 @@
+.btn-edit path { fill: #2794f2; }
+.btn-edit:hover path { fill: #2172b8; }
+
+.btn-delete path { fill: #ff2658; }
+.btn-delete:hover path { fill: #c81b43; }
