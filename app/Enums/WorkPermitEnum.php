@@ -4,6 +4,8 @@ namespace App\Enums;
 
 class WorkPermitEnum
 {
+	const DELETE_ID = 0;
+	const DELETE = 'Silinmə';
 	const PENDING_ID = 1;
 	const PENDING = 'Gözləmədə';
 	const REJECT_ID = 2;

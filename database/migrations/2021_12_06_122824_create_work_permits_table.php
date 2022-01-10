@@ -19,6 +19,7 @@ class CreateWorkPermitsTable extends Migration
             $table->datetime('from');
             $table->datetime('to');
             $table->string('reason', 1000);
+            $table->unsignedBigInteger('executor_id')->nullable();
             $table->unsignedBigInteger('approved_by1')->nullable();
             $table->datetime('approved_at1')->nullable();
             $table->unsignedBigInteger('approved_by2')->nullable();
@@ -32,6 +33,7 @@ class CreateWorkPermitsTable extends Migration
             $table->timestamps();
 
             $table->foreign('maker_id')->references('id')->on('users');
+            $table->foreign('executor_id')->references('id')->on('users');
             $table->foreign('approved_by1')->references('id')->on('users');
             $table->foreign('approved_by2')->references('id')->on('users');
             $table->foreign('approved_by3')->references('id')->on('users');

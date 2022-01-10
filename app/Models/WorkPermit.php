@@ -13,6 +13,6 @@ class WorkPermit extends Model
      * @var array
      */
     protected $fillable = [
-        'maker_id', 'from', 'to', 'reason', 'approved_by1', 'approved_at1', 'approved_by2', 'approved_at2', 'approved_by3', 'approved_at3', 'reject_reason', 'rejected_at', 'status'
+        'maker_id', 'executor_id', 'from', 'to', 'reason', 'approved_by1', 'approved_at1', 'approved_by2', 'approved_at2', 'approved_by3', 'approved_at3', 'reject_reason', 'rejected_at', 'status'
     ];
 }

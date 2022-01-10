@@ -9,12 +9,7 @@ class HttpService
 	private $client;
 	public function __construct()
 	{
-		$headers = [
-		    'RequestKey' => '38WVc6l7pKAixlQYNqMByFHhFOIZ67',
-		    'RequestClientIP' => '172.16.248.27'
-		];
-
-		$this->client = new Client(['base_uri' => 'http://mlspp.integration.services', 'headers' => $headers]);
+		$this->client = new Client(['base_uri' => 'http://localhost:3001/']);
 	}
 
 	public function getGet($url, $urlData = [])
@@ -26,8 +21,6 @@ class HttpService
 	public function getPost($url, $data = [], $urlData = [])
 	{
 		$response = $this->client->request('POST', $this->_setUrl($url, $urlData), ['data' => $data]);
-		dd($response);
-
 		return json_decode($response->getBody()->getContents());
 	}
 
