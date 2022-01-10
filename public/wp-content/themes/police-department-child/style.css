@@ -1,0 +1,20 @@
+@charset 'utf-8';
+/*
+ Theme Name: 	Police Department Child Theme
+ Theme URI: 	http://police.themerex.net/
+ Description: 	Police Department Child Theme
+ Author: 		ThemeRex
+ Author URI: 	http://themerex.net/
+ Template: 		police-department
+ Version: 		1.0
+ Tags: 			flexible-header, accessibility-ready, custom-background, custom-colors, custom-header, custom-menu, featured-image-header, featured-images, full-width-template, microformats, post-formats, theme-options, threaded-comments, translation-ready
+ Text Domain: 	police-department
+*/
+
+
+@import url("../police-department/style.css");
+
+
+
+/* =Theme customization starts here
+-------------------------------------------------------------- */
