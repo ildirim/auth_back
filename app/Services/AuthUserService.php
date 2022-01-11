@@ -83,7 +83,8 @@ class AuthUserService
 		$result = $this->authUser->select('auth_users.id', 'auth_users.is_late', 'auth_users.is_overtime', 'auth_users.confirm_at', 'auth_users.created_at', 'u.name', 'u.surname', 'u.email', 'u.phone', 'b.name as branch_name')
 						      ->selectRaw('(select name from branch where id=b.parent_id) department_name')
    	     				      ->join('users as u', 'u.id', '=', 'auth_users.user_id')
-	     				  	  ->join('branch as b', 'b.id', '=', 'u.branch_id')
+   	     				      ->join('user_authority as ua', 'ua.id', '=', 'auth_users.user_id')
+	     				  	  ->join('branch as b', 'b.id', '=', 'ua.branch_id')
 							  ->where('auth_users.created_at', '>=', date('Y-m-d', strtotime($data['from'])))
 							  ->where('auth_users.created_at', '<=', date('Y-m-d 23:59:00', strtotime($data['to'])));
 
